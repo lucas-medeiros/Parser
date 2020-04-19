@@ -1,0 +1,19 @@
+﻿  Parser.c
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(78,38): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(79,29): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(80,33): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(83,38): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(84,29): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(85,33): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(88,38): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(89,29): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(90,32): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(93,38): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(94,31): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(98,38): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(99,32): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(100,30): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(103,38): warning C4090: '=': qualificadores 'const' diferentes
+C:\Users\Pichau\Documents\GitHub\Parser\Parser\Parser\Parser.c(104,31): warning C4090: '=': qualificadores 'const' diferentes
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): error MSB6006: "link.exe" foi encerrado com o código 1168.
+LINK : fatal error LNK1168: não foi possível abrir C:\Users\Pichau\Documents\GitHub\Parser\Parser\Debug\Parser.exe para escrita
