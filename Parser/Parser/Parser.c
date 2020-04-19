@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h> 
+
 /*
 * Este programa, baseado no trabalho de Ryan Flannery (2009)
 * disponível em: http://www.ryanflannery.net/teaching/common/recursive-descent-parsing/
@@ -37,7 +39,6 @@ bool AbreParen(char* s[]);          //AbreParen ::= "(".
 bool FechaParen(char* s[]);         //FechaParen :: = ")".
 bool OperadorUnario(char* s[]);     //OperatorUnario :: = "\neg".
 bool OperadorBinario(char* s[]);    //OperatorBinario ::= "\vee" | "\wedge" | "\rightarrow" | "\leftrightarrow".
-//void ImprimeTokens(token Tokens[], int size);
 
 //funções de apoio
 void RemoverEspacosEmBranco(char* s[]);
@@ -50,18 +51,19 @@ const char* STRING_OR = "\\vee";
 const char* STRING_AND = "\\wedge";
 const char* STRING_IMPLIES = "\\rightarrow";
 const char* STRING_IFF = "\\leftrightarrow";
+const char* STRING_NULL = "null";
 const char* CLASS_OPERADOR = "operador";
 const char* CLASS_OPERANDO = "operando";
-const char* TYPE_OU = "operador unário";
-const char* TYPE_OB = "operador binário";
-const char* TYPE_PROP = "proposição";
+const char* TYPE_OU = "operador unario";
+const char* TYPE_OB = "operador binario";
+const char* TYPE_PROP = "proposicao";
 const char* TYPE_CONST = "constante";
-const char* CONST_T = "true";
-const char* CONST_F = "false";
+const char* CONST_T = "T";
+const char* CONST_F = "F";
 
 //comprimento máximo das proposições e das linhas
-#define COMPRIMENTO_PROPOSICAO 100
-#define COMPRIMENTO_MAXIMO_DA_LINHA 1000
+#define COMPRIMENTO_PROPOSICAO 50
+#define COMPRIMENTO_MAXIMO_DA_LINHA 500
 #define NUM_MAX_TOKENS 50
 
 typedef struct {
@@ -70,47 +72,37 @@ typedef struct {
     char* valor;
 } token;
 
+int pos;
+token Tokens[NUM_MAX_TOKENS];
+bool imprimiu;
+
+void LimpaTokens() {
+    for (int i = 0; i < NUM_MAX_TOKENS; i++) {
+        Tokens[i].classe = "";
+        Tokens[i].tipo = "";
+        Tokens[i].valor = "";
+    }
+    pos = 0;
+    imprimiu = false;
+}
+
+void ImprimeTokens() {
+    printf("\nTabela de tokens: \nclasse\t\ttipo\t\t\tvalor\n\n");
+    for (int i = 0; i < NUM_MAX_TOKENS; i++) {
+        if (Tokens[i].classe != ""){
+            if(strcmp(Tokens[i].tipo, TYPE_OB) == 0)
+                printf("%s\t%s\t%s\n", Tokens[i].classe, Tokens[i].tipo, Tokens[i].valor);
+            else
+                printf("%s\t%s\t\t%s\n", Tokens[i].classe, Tokens[i].tipo, Tokens[i].valor);
+        }
+    }
+    printf("\n\n");
+}
+
 //Programa de Testes
 int main(int argc, char* argv[]) {
 
-    token Tokens[6];
-    int i = 0;
-    Tokens[i].classe = CLASS_OPERADOR;
-    Tokens[i].tipo = TYPE_OB;
-    Tokens[i].valor = STRING_NOT;
-
-    i++;
-    Tokens[i].classe = CLASS_OPERADOR;
-    Tokens[i].tipo = TYPE_OU;
-    Tokens[i].valor = STRING_AND;
-    
-    i++;
-    Tokens[i].classe = CLASS_OPERADOR;
-    Tokens[i].tipo = TYPE_OB;
-    Tokens[i].valor = STRING_OR;
-    
-    i++;
-    Tokens[i].classe = CLASS_OPERANDO;
-    Tokens[i].tipo = TYPE_PROP;
-    Tokens[i].valor = "lucas";
-
-    i++;
-    Tokens[i].classe = CLASS_OPERANDO;
-    Tokens[i].tipo = TYPE_CONST;
-    Tokens[i].valor = CONST_T;
-
-    i++;
-    Tokens[i].classe = CLASS_OPERANDO;
-    Tokens[i].tipo = TYPE_PROP;
-    Tokens[i].valor = "2020";
-
-
-    //ImprimeTokens(Tokens, i);
-    printf("Tabela de tokens: \nclasse\t\ttipo\t\tvalor\n\n");
-    for (int j = 0; j > i; j++) {
-        printf("%s\t\t%s\t\t%s\n", Tokens[j].classe, Tokens[j].tipo, Tokens[j].valor);
-    }
-    printf("\n\n");
+    LimpaTokens();
 
     //array para guardar a fórmula digitada
     char input[COMPRIMENTO_MAXIMO_DA_LINHA];
@@ -136,10 +128,15 @@ int main(int argc, char* argv[]) {
         copy = input;
 
         //aqui faremos a avaliação da proposição digitada.
-        if (FormulaWrapper(&copy))
+        if (FormulaWrapper(&copy)) {
             printf("===> Formula corretamente formatada. :)\n");
+            if(!imprimiu)
+                ImprimeTokens();
+        }
         else
             printf("===> Formula mal formatada. :(\n");
+        //tem q limpar o vetor Tokens dps
+        LimpaTokens();
     }
     return 0;
 }//fim do main
@@ -189,14 +186,6 @@ bool match(char* s[], const char* semente) {
     return false;
 }
 
-/*
-void ImprimeTokens(token Tokens[], int size) {
-    printf("Tabela de tokens: \nclasse\t\ttipo\t\tvalor\n\n");
-    for (int i = 0; i < size; i++) {
-        printf("%s\t\t%s\t\t%s\n", Tokens[i].classe, Tokens[i].tipo, Tokens[i].valor);
-    }
-} */
-
 /*****************************************************************************
 * Todas as funções principais se comportam da mesma forma.
 * A função "bool Expressions(char *s[])" irá
@@ -233,7 +222,21 @@ bool Constante(char* s[]) {
     //só por segurança removemos os espaços em todas as funções
     RemoverEspacosEmBranco(s);
     //fazemos a verificação e interrompemos a função
-    if (match(s, "T") || match(s, "F")) return true;
+    if (match(s, "T")) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERANDO;
+        Tokens[pos].tipo = TYPE_CONST;
+        Tokens[pos].valor = CONST_T;
+        return true;
+    } 
+    else if (match(s, "F")) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERANDO;
+        Tokens[pos].tipo = TYPE_CONST;
+        Tokens[pos].valor = CONST_F;
+        return true;
+    }
+
     //não ouve coincidência então devolvemos o string original
     *s = original;
     return false;
@@ -260,7 +263,17 @@ bool Proposicao(char* s[]) {
     // referência do sscanf em http://pubs.opengroup.org/onlinepubs/009695399/functions/scanf.html
     // se for ler strings lembre-se que é necessário dimensionar o buffer para cada string
     if (sscanf_s(*s, "%[a-z0-9]%n", &prop, sizeof(prop), &numeroCaracteresLidos) == 1) {
+
+        prop[numeroCaracteresLidos + 1] = '\0';
+
+        pos++;
+        Tokens[pos].classe = CLASS_OPERANDO;
+        Tokens[pos].tipo = TYPE_PROP;
+        Tokens[pos].valor = prop;
         *s = *s + numeroCaracteresLidos;
+        ImprimeTokens();
+        if (*s != '\0' && !imprimiu)
+            imprimiu = true;
         return true;
     }
     //não achou nenhuma proposição devolve o ponteiro original
@@ -274,9 +287,14 @@ bool OperadorUnario(char* s[]) {
     char* original = *s;
     RemoverEspacosEmBranco(s);
 
-    if (match(s, STRING_NOT))
+    if (match(s, STRING_NOT)) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERADOR;
+        Tokens[pos].tipo = TYPE_OU;
+        Tokens[pos].valor = STRING_NOT;
         return true;
-
+    }
+      
     *s = original;
     return false;
 }
@@ -309,10 +327,35 @@ bool OperadorBinario(char* s[]) {
     char* original = *s;
     RemoverEspacosEmBranco(s);
 
-    if (match(s, STRING_OR) || match(s, STRING_AND)
-        || match(s, STRING_IMPLIES) || match(s, STRING_IFF))
+    if (match(s, STRING_OR)) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERADOR;
+        Tokens[pos].tipo = TYPE_OB;
+        Tokens[pos].valor = STRING_OR;
         return true;
-
+    }
+    else if (match(s, STRING_AND)) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERADOR;
+        Tokens[pos].tipo = TYPE_OB;
+        Tokens[pos].valor = STRING_AND;
+        return true;
+    }
+    else if (match(s, STRING_IMPLIES)) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERADOR;
+        Tokens[pos].tipo = TYPE_OB;
+        Tokens[pos].valor = STRING_IMPLIES;
+        return true;
+    }
+    else if (match(s, STRING_IFF)) {
+        pos++;
+        Tokens[pos].classe = CLASS_OPERADOR;
+        Tokens[pos].tipo = TYPE_OB;
+        Tokens[pos].valor = STRING_IFF;
+        return true;
+    }
+    
     *s = original;
     return false;
 }
