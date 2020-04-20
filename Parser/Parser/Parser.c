@@ -51,52 +51,61 @@ const char* STRING_OR = "\\vee";
 const char* STRING_AND = "\\wedge";
 const char* STRING_IMPLIES = "\\rightarrow";
 const char* STRING_IFF = "\\leftrightarrow";
-const char* STRING_NULL = "null";
+
+//strings constantes para facilitar montagem e impressão da tabela de tokens
+const char* STRING_NULL = "null"; //string para valor, caso valor não for relevante para um token
+
+//classes de tokens: classe = operador || operando
 const char* CLASS_OPERADOR = "operador";
 const char* CLASS_OPERANDO = "operando";
+
+//tipo de tokens: tipo = operador unario || operador binario || proposicao || constante
 const char* TYPE_OU = "operador unario";
 const char* TYPE_OB = "operador binario";
 const char* TYPE_PROP = "proposicao";
 const char* TYPE_CONST = "constante";
+
+//constantes podem ser = "T" || "F"
 const char* CONST_T = "T";
 const char* CONST_F = "F";
 
 //comprimento máximo das proposições e das linhas
 #define COMPRIMENTO_PROPOSICAO 50
 #define COMPRIMENTO_MAXIMO_DA_LINHA 500
+
+//Número máximo de tokens por linha aceitos (para inicialização do array de tokens)
 #define NUM_MAX_TOKENS 50
 
+//Estrutura de dados (struct) para um token - contém classe, tipo e valor
 typedef struct {
     char* classe;
     char* tipo;
     char* valor;
 } token;
 
+//variáveis globais: posição atual do array e o array de Tokens que salva a tabela de tokens
 int pos;
 token Tokens[NUM_MAX_TOKENS];
-bool imprimiu;
 
-void LimpaTokens() {
+void LimpaTokens() { //função de reset da tabela de tokens p/ inicialização de outra fórmula
     for (int i = 0; i < NUM_MAX_TOKENS; i++) {
         Tokens[i].classe = "";
         Tokens[i].tipo = "";
         Tokens[i].valor = "";
     }
     pos = 0;
-    imprimiu = false;
 }
 
-void ImprimeTokens() {
-    printf("\nTabela de tokens: \nclasse\t\ttipo\t\t\tvalor\n\n");
+void ImprimeTokens() { //função para imprimir a tabela de tokens na tela
     for (int i = 0; i < NUM_MAX_TOKENS; i++) {
-        if (Tokens[i].classe != ""){
+        if (Tokens[i].classe != "" && Tokens[i].tipo != TYPE_PROP){
             if(strcmp(Tokens[i].tipo, TYPE_OB) == 0)
                 printf("%s\t%s\t%s\n", Tokens[i].classe, Tokens[i].tipo, Tokens[i].valor);
             else
                 printf("%s\t%s\t\t%s\n", Tokens[i].classe, Tokens[i].tipo, Tokens[i].valor);
         }
     }
-    printf("\n\n");
+    
 }
 
 //Programa de Testes
@@ -126,17 +135,18 @@ int main(int argc, char* argv[]) {
         //vamos manter uma cópia porque todas as funções operam com os ponteiros
         //da string digitada.
         copy = input;
-
+        printf("\nTabela de tokens: \nclasse\t\ttipo\t\t\tvalor\n\n");
         //aqui faremos a avaliação da proposição digitada.
         if (FormulaWrapper(&copy)) {
+            ImprimeTokens();
+            printf("\n\n");
             printf("===> Formula corretamente formatada. :)\n");
-            if(!imprimiu)
-                ImprimeTokens();
         }
         else
             printf("===> Formula mal formatada. :(\n");
         //tem q limpar o vetor Tokens dps
         LimpaTokens();
+        printf("\n");
     }
     return 0;
 }//fim do main
@@ -271,9 +281,7 @@ bool Proposicao(char* s[]) {
         Tokens[pos].tipo = TYPE_PROP;
         Tokens[pos].valor = prop;
         *s = *s + numeroCaracteresLidos;
-        ImprimeTokens();
-        if (*s != '\0' && !imprimiu)
-            imprimiu = true;
+        printf("%s\t%s\t\t%s\n", Tokens[pos].classe, Tokens[pos].tipo, Tokens[pos].valor);
         return true;
     }
     //não achou nenhuma proposição devolve o ponteiro original
