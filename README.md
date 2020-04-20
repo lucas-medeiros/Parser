@@ -4,7 +4,11 @@
     Engenharia de Computação - PUCPR 2020
 
     Instruções fornecidas:
-    8. A função do analisador léxico é encontrar os lexemas de uma linguagem definida em relação a um determinado alfabeto Σ e classificar este lexema em tokens para uso do analisador léxico. Durante a disciplina nós fizemos um parser Recursive Descent para uma linguagem desenhada especificamente para as operações da lógica proposicional. Este parser apenas validava as expressões digitadas. Sua tarefa será modificar este parser para que, além de validar ele gere os tokens utilizados em cada expressão. Para isso você deverá utilizar as seguintes classes: operador, operando, tipo e valor. Os lexemas ou serão da classe operador ou da classe operando. Todos terão tipo de acordo com a gramática utilizada e todos terão valor, quando o valor não for relevante para um determinado token use a expressão “null” sem as aspas.
+    8. A função do analisador léxico é encontrar os lexemas de uma linguagem definida em relação a um determinado alfabeto Σ e classificar este lexema em tokens para uso do analisador léxico. 
+    Durante a disciplina nós fizemos um parser Recursive Descent para uma linguagem desenhada especificamente para as operações da lógica proposicional. 
+    Este parser apenas validava as expressões digitadas. Sua tarefa será modificar este parser para que, além de validar ele gere os tokens utilizados em cada expressão. 
+    Para isso você deverá utilizar as seguintes classes: operador, operando, tipo e valor. Os lexemas ou serão da classe operador ou da classe operando.
+    Todos terão tipo de acordo com a gramática utilizada e todos terão valor, quando o valor não for relevante para um determinado token use a expressão “null” sem as aspas.
 
     A gramática utilizada para este exercício é:
 
