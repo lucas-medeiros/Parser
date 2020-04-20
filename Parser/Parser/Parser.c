@@ -4,6 +4,14 @@
 #include <stdlib.h> 
 
 /*
+* Programa alterado por Lucas Cardoso de Medeiros
+* Para o exercício 8 da Atividade Somativa
+* da disciplina de Linguagens Formais e Compiladores
+* Engenharia de Computação - PUCPR 2020
+*/
+
+
+/*
 * Este programa, baseado no trabalho de Ryan Flannery (2009)
 * disponível em: http://www.ryanflannery.net/teaching/common/recursive-descent-parsing/
 * implementa um parser recursive descent. Para expressões da lógica propsicional
@@ -219,7 +227,8 @@ bool Formula(char* s[]) {
     RemoverEspacosEmBranco(s);
     //agora vamos chamar cada uma das funções das regras inferiores para ver se uma delas é verdadeira
     //e encerra função retornando true se encontrar uma delas
-    if (Constante(s) || Proposicao(s) || FormulaUnaria(s) || FormulaBinaria(s)) return true;
+    if (Constante(s) || Proposicao(s) || FormulaUnaria(s) || FormulaBinaria(s)) 
+        return true;
     *s = original;
     return false;
 }
@@ -302,7 +311,6 @@ bool OperadorUnario(char* s[]) {
         Tokens[pos].valor = STRING_NOT;
         return true;
     }
-      
     *s = original;
     return false;
 }
